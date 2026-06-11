@@ -11,8 +11,11 @@ export class CharactersService {
   ) {}
 
 
-  async findAll(): Promise<Character[]>{
-    return this.characterModel.find().exec();
+ async findAll(exclude?: string): Promise<Character[]> {
+    if (!exclude) return this.characterModel.find().exec();
+  
+    const excludeNames = exclude.split(',');
+    return this.characterModel.find({ name: { $nin: excludeNames } }).exec();
   }
 
   async findOne(name: string): Promise<Character | null>{
